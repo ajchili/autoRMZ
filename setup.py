@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='autoRMZ',
     version='0.0.1',
-    packages=['tensorflow', 'numpy'],
+    packages=['tensorflow', 'numpy', 'opencv-python', 'numpy'],
     url='https://github.com/ajchili/autoRMZ',
     license='MIT',
     author='ajchili (Kirin Patel)',
