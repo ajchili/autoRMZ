@@ -1,0 +1,10 @@
+<ul>
+  <% for (let i = 0; i < fileNames.length; i++) { %>
+  <li>
+    <a href="/process/<%= fileNames[i] %>"><%= fileNames[i] %></a>
+    <% if (processed[i]) { %>
+    &emsp;<strong>(processed)</strong>
+    <% } %>
+  </li>
+  <% } %>
+</ul>

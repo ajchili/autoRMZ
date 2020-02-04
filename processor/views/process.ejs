@@ -1,0 +1,120 @@
+<canvas id="viewport" width="1024" height="768"></canvas>
+<br />
+<ul id="areas"></ul>
+<br />
+<button onclick="save();">Save</button>
+<button onclick="window.location.reload();">Clear</button>
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById("viewport");
+  const context = canvas.getContext("2d");
+  const baseImage = new Image();
+  baseImage.src = "<%= filePath %>";
+  baseImage.onload = () => {
+    if (canvas && context) {
+      context.drawImage(baseImage, 0, 0);
+    }
+  };
+
+  let selecting = false;
+  const area = {
+    p1: [-1, -1],
+    p2: [-1, -1],
+  };
+  let areas = [];
+
+  if (canvas) {
+    canvas.addEventListener("mousedown", (e) => {
+      selecting = !selecting;
+      if (selecting) {
+        area.p1 = [e.clientX, e.clientY];
+        area.p2 = [e.clientX, e.clientY];
+      } else {
+        areas = [
+          {
+            p1: [...area.p1],
+            p2: [...area.p2],
+          },
+        ].concat(areas);
+        updateAreas();
+      }
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+      if (selecting) {
+        area.p2 = [e.clientX, e.clientY];
+      }
+    });
+
+    const draw = () => {
+      if (canvas && context) {
+        context.drawImage(baseImage, 0, 0);
+        if (selecting) {
+          context.beginPath();
+          context.strokeStyle = "#FF0000";
+          context.rect(
+            area.p1[0],
+            area.p1[1],
+            area.p2[0] - area.p1[0],
+            area.p2[1] - area.p1[1]
+          );
+          context.closePath();
+          context.stroke();
+        }
+
+        for (let _area of areas) {
+          context.beginPath();
+          context.strokeStyle = "#FF0000";
+          context.rect(
+            _area.p1[0],
+            _area.p1[1],
+            _area.p2[0] - _area.p1[0],
+            _area.p2[1] - _area.p1[1]
+          );
+          context.closePath();
+          context.stroke();
+        }
+      }
+    };
+    setInterval(draw, 100);
+
+    function save() {
+      fetch("http://localhost:8080/<%= fileName %>", {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify({
+          areas,
+        }),
+      });
+    }
+
+    function deleteArea(i) {
+      areas = areas.filter((_, _i) => i !== _i);
+      updateAreas();
+    }
+
+    const updateAreas = () => {
+      const areaUnorderedList = document.getElementById("areas");
+      if (areaUnorderedList) {
+        areaUnorderedList.innerHTML = "";
+        for (let i = 0; i < areas.length; i++) {
+          (() => {
+            const _area = areas[i];
+            areaUnorderedList.insertAdjacentHTML(
+              "beforeend",
+              `<li>[${_area.p2[0]}, ${_area.p2[1]}] - [${_area.p2[0]}, ${_area.p2[1]}]<button onclick="deleteArea(${i});">Delete</button>`
+            );
+          })();
+        }
+      }
+    };
+  }
+</script>
