@@ -93,7 +93,15 @@
         body: JSON.stringify({
           areas,
         }),
-      });
+      })
+        .then((result) => {
+          alert("Saved!");
+          window.location.replace("/");
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("An unexpected error occurred!");
+        });
     }
 
     function deleteArea(i) {
