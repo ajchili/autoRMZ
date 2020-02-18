@@ -118,7 +118,7 @@
             const _area = areas[i];
             areaUnorderedList.insertAdjacentHTML(
               "beforeend",
-              `<li>[${_area.p2[0]}, ${_area.p2[1]}] - [${_area.p2[0]}, ${_area.p2[1]}]<button onclick="deleteArea(${i});">Delete</button>`
+              `<li>[${_area.p1[0]}, ${_area.p1[1]}] - [${_area.p2[0]}, ${_area.p2[1]}]<button onclick="deleteArea(${i});">Delete</button>`
             );
           })();
         }
