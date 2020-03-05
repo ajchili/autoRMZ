@@ -1,0 +1,15 @@
+name: Dataset Downloader
+description: Downloads dataset from directory of GitHub repository
+inputs:
+  - {name: repository, type: String, description: 'Github repository to download data from.'}
+  - {name: path, type: String, description: 'Path in repository where data should be downloaded from.'}
+  - {name: output_path, type: GcsPath, description: 'Path where dataset should be saved to.'}
+implementation:
+  container:
+    image: gcr.io/autormz/download-dataset
+    command: [python3, /pipelines/component/src/download.py]
+    args: [
+      --repository, {inputValue: repository},
+      --path, {inputValue: path},
+      --output-path, {inputValue: output_path},
+    ]
