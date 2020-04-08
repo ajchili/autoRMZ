@@ -4,7 +4,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 
-const preprocessedDataPath = path.join(__dirname, "../dataset/preprocessed");
+const preprocessedDataPath = path.join(__dirname, "../dataset/images");
 const processedDataPath = path.join(__dirname, "../dataset/processed");
 
 const app = express();
@@ -37,7 +37,7 @@ app.get("/:fileName", (req, res) => {
     res.status(400).send("File name must be provided!");
     return;
   }
-  res.render("process", { filePath: `preprocessed/${fileName}`, fileName });
+  res.render("process", { filePath: `images/${fileName}`, fileName });
 });
 
 app.post("/:fileName", (req, res) => {
